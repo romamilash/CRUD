@@ -12,10 +12,6 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
-        'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => '89TEZ1_rH7BxA3kJ5kSKwRntVZWIgoQ8',
-        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -42,14 +38,21 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'game', 'pluralize' => false],
+                /* TODO разделить методы получения всех игр и поиска игры по жанру */
             ],
         ],
-        */
+        'request' => [
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
+            'cookieValidationKey' => '89TEZ1_rH7BxA3kJ5kSKwRntVZWIgoQ8',
+        ],
     ],
     'defaultRoute' => 'game/index',
     'params' => $params,

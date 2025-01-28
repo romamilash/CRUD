@@ -49,11 +49,6 @@ class Game extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function findGameGenres(array $genres) : array|null
-    {
-        return ArrayHelper::getColumn($genres, 'name');
-    }
-
     /**
      * Gets query for [[Genres]].
      *
@@ -62,5 +57,17 @@ class Game extends \yii\db\ActiveRecord
     public function getGenres()
     {
         return $this->hasMany(Genre::class, ['id' => 'genres_id'])->viaTable('games_genres', ['games_id' => 'id']);
+    }
+
+    public function fields()
+    {
+        return [
+            'id',
+            'name',
+            'developer',
+            'genre_id' => function () {
+                return $this->genres;
+            }
+        ];
     }
 }

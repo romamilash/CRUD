@@ -2,9 +2,9 @@
 
 namespace app\models;
 
+use app\models\Game;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Game;
 
 /**
  * GameSearch represents the model behind the search form of `app\models\Game`.
@@ -41,6 +41,7 @@ class GameSearch extends Game
     public function search($params)
     {
         $query = Game::find()->joinWith('genres');
+        $this->genre_id = $params['genre_id'];
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
