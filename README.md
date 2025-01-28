@@ -13,7 +13,7 @@
 
 ### 2. Развёртывание
 
-- Склонируйте проект `git clone https://github.com/romamilash/shipment.git`.
+- Склонируйте проект `git clone https://github.com/romamilash/CRUD.git`.
 - Настройте подключение к БД в файле **config/db.php**.
 - Установите зависимости `composer install`.
 - Выполните консольную команду `yii migrate`.
