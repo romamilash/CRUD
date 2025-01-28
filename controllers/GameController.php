@@ -1,37 +1,19 @@
 <?php
 
-namespace app\controllers;
+namespace api;
 
 use app\models\Game;
 use app\models\GameSearch;
 use app\models\Genre;
-use yii\web\Controller;
+use yii\rest\ActiveController;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * GameController implements the CRUD actions for Game model.
  */
-class GameController extends Controller
+class GameController extends ActiveController
 {
-    /**
-     * @inheritDoc
-     */
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::class,
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
-
+    public $modelClass = 'app\models\Game';
     /**
      * Lists all Game models.
      *
@@ -54,22 +36,20 @@ class GameController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+//    public function actionView($id)
+//    {
+//        return $this->render('view', [
+//            'model' => $this->findModel($id),
+//        ]);
+//    }
 
     /**
      * Creates a new Game model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return Game | array
      */
     public function actionCreate()
     {
         $model = new Game();
-        $genres = Genre::getGenres();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -77,29 +57,22 @@ class GameController extends Controller
                     $model->link('genres', Genre::findOne(['id' => $genre]));
                 }
 
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $model;
             }
         } else {
-            $model->loadDefaultValues();
+            return $model->getErrors();
         }
-
-        return $this->render('create', [
-            'model' => $model,
-            'genres' => $genres,
-        ]);
     }
 
     /**
      * Updates an existing Game model.
-     * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return Game | array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $genres = Genre::getGenres();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $model->unlinkAll('genres');
@@ -108,27 +81,23 @@ class GameController extends Controller
                 $model->link('genres', Genre::findOne(['id' => $genre]));
             }
 
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $model;
+        } else {
+            return $model->getErrors();
         }
-
-        return $this->render('update', [
-            'model' => $model,
-            'genres' => $genres,
-        ]);
     }
 
     /**
      * Deletes an existing Game model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
+     * @return array
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return ['success' => true];
     }
 
     /**
@@ -144,6 +113,6 @@ class GameController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Game not found.');
     }
 }
